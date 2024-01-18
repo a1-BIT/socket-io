@@ -26,8 +26,16 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (Socket) => {
-  console.log("User Connected");
-  console.log(Socket.id);
+  console.log("User Connected " + Socket.id);
+
+  Socket.emit("welcome", "Welcome to the realtime data" + Socket.id);
+  Socket.on("message", (s) => {
+    console.log(s, Socket.id);
+  });
+  // Socket.broadcast.emit("welcome", "Welcome to the realtime data" + Socket.id);
+  Socket.on("disconnect", () => {
+    console.log(`User Disconnect ${Socket.id}`);
+  });
 });
 
 server.listen(port, () => {
