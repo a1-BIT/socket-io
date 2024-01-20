@@ -31,6 +31,7 @@ io.on("connection", (Socket) => {
   Socket.emit("welcome", "Welcome to the realtime data" + Socket.id);
   Socket.on("message", (s) => {
     console.log(s, Socket.id);
+    io.emit("recive", s);
   });
   // Socket.broadcast.emit("welcome", "Welcome to the realtime data" + Socket.id);
   Socket.on("disconnect", () => {

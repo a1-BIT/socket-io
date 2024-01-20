@@ -1,10 +1,13 @@
   import { Button, Container, TextField, Typography } from "@mui/material";
   import React, { useEffect, useState,useMemo } from "react";
   import { io } from "socket.io-client"
+
   function App() {
 
 
     const server = useMemo(() => io('http://localhost:4545'), [])
+    const [message, setMessage] = useState("")
+    const [magList,setMagList] = useState([])
     
     
 
@@ -15,14 +18,17 @@
       })
       server.on('welcome',(data)=>{
         console.log(data);
+      })
+      server.on('recive',(dd)=>{
+        setMagList(dd)
         
       })
       return ()=>{
         server.disconnect()
       }
-    })
+    },[])
 
-    const [message, setMessage] = useState("")
+    
 
     const hanldeSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
@@ -31,7 +37,7 @@
     
     return (
       <Container maxWidth="md">
-        <Typography variant="h1" component='div' gutterBottom>
+        <Typography variant="h6" component='div' gutterBottom>
           Welcome You
         </Typography>
         <form onSubmit={hanldeSubmit}>
@@ -43,6 +49,13 @@
             Send
           </Button>
         </form>
+        {
+          magList.length> 0 ? magList.map((m,i)=>{
+            return (
+              <p key={i}>{m}</p>
+            )
+          }) : null
+        }
       </Container>
     )
   }
